@@ -8,7 +8,7 @@ import com.generation.dumorro.model.*;
 
 public interface ItemRepository extends JpaRepository<Item, Long> {
 	
-	 public List<Item> findAllByNomeContainingIgnoreCase(@Param("Nome") String Nome);
+	 public List<Item> findAllByNomeContainingIgnoreCase(@Param("nome") String nome);
 	 
 
 }

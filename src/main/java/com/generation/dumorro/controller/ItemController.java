@@ -23,7 +23,7 @@ import com.generation.dumorro.repository.ItemRepository;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/Item")
+@RequestMapping("/itens")
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 
 public class ItemController {

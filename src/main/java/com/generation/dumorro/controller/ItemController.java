@@ -1,4 +1,5 @@
 package com.generation.dumorro.controller;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.generation.dumorro.model.Item;
+import com.generation.dumorro.repository.CategoriaRepository;
 import com.generation.dumorro.repository.ItemRepository;
 
 import jakarta.validation.Valid;
@@ -27,48 +29,59 @@ import jakarta.validation.Valid;
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 
 public class ItemController {
-	
-	@Autowired 
+
+	@Autowired
 	private ItemRepository itemRepository;
-	
+
+	@Autowired
+	private CategoriaRepository categoriaRepository;
+
 	@GetMapping
-			public ResponseEntity<List<Item>> getAll(){
-				return ResponseEntity.ok(itemRepository.findAll());
-				
-			}
-	@GetMapping ("/{id}")
-	public ResponseEntity<Item> getById(@PathVariable Long id){
-		return itemRepository.findById(id)
-		.map(resposta -> ResponseEntity.ok (resposta))
-		.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	public ResponseEntity<List<Item>> getAll() {
+		return ResponseEntity.ok(itemRepository.findAll());
+
 	}
+
+	@GetMapping("/{id}")
+	public ResponseEntity<Item> getById(@PathVariable Long id) {
+		return itemRepository.findById(id).map(resposta -> ResponseEntity.ok(resposta))
+				.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	}
+
 	@GetMapping("/nome/{nome}")
-	public ResponseEntity<List<Item>> getByTitle(@PathVariable 
-	String nome){
-		return ResponseEntity.ok(itemRepository
-		.findAllByNomeContainingIgnoreCase(nome));
+	public ResponseEntity<List<Item>> getByTitle(@PathVariable String nome) {
+		return ResponseEntity.ok(itemRepository.findAllByNomeContainingIgnoreCase(nome));
 	}
+
 	@PostMapping
-	public ResponseEntity<Item>post(@Valid @RequestBody Item item){
-		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(itemRepository.save(item));
+	public ResponseEntity<Item> post(@Valid @RequestBody Item item) {
+		if (categoriaRepository.existsById(item.getCategoria().getId()))
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(itemRepository.save(item));
+
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não exite!", null);
 	}
+
 	@PutMapping
-	public ResponseEntity<Item> put(@Valid @RequestBody Item item){
-		return itemRepository.findById(item.getId())
-		.map(resposta -> ResponseEntity.status(HttpStatus.CREATED)
-		.body(itemRepository.save(item)))
-		.orElse(ResponseEntity.status(HttpStatus.NOT_FOUND).build());
+	public ResponseEntity<Item> put(@Valid @RequestBody Item item) {
+		if (itemRepository.existsById(item.getId())) {
+			if (categoriaRepository.existsById(item.getCategoria().getId()))
+				return ResponseEntity.status(HttpStatus.OK)
+						.body(itemRepository.save(item));
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não existe!", null);
+		}
+		return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 	}
+
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	@DeleteMapping("/{id}")
-	public void delete(@PathVariable Long id ) {
+	public void delete(@PathVariable Long id) {
 		Optional<Item> item = itemRepository.findById(id);
-		
-	if(item.isEmpty())
-		throw new ResponseStatusException(HttpStatus.NOT_FOUND);
-	itemRepository.deleteById(id);
+
+		if (item.isEmpty())
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+		itemRepository.deleteById(id);
 	}
-		
-	}
-	
+
+}

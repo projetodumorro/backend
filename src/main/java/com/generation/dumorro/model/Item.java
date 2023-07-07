@@ -21,7 +21,7 @@ public class Item {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@NotNull(message = "O nome é obrigatório!")
+	@NotNull(message = "O nome é obrigatório")
 	private String nome;
 	
 	@NotNull(message = "A descrição é obrigatório")
@@ -30,8 +30,8 @@ public class Item {
 	@NotNull(message = "A foto é obrigatório")
 	private String foto;
 	
-	@NotNull(message = "Preço é obrigatório!")
-    @Positive(message = "O preço deve ser maior do que zero!")
+	@NotNull(message = "Preço é obrigatório")
+    @Positive(message = "O preço deve ser maior do que zero")
     private BigDecimal preco;
 	
 	@NotNull(message = "A quantidade é obrigatório")
@@ -40,6 +40,10 @@ public class Item {
 	@ManyToOne
 	@JsonIgnoreProperties("item")
 	private Categoria categoria;
+	
+	@ManyToOne
+	@JsonIgnoreProperties("postagem")
+	private Usuario usuario;
 
 	public Categoria getCategoria() {
 		return categoria;
@@ -95,6 +99,13 @@ public class Item {
 
 	public void setQuantidade(int quantidade) {
 		this.quantidade = quantidade;
+	}
+	
+	public Usuario getUsuario() {
+		return usuario;
+	}
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
 	}
 	
 	

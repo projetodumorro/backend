@@ -49,9 +49,18 @@ public class ItemController {
 		.findAllByNomeContainingIgnoreCase(nome));
 	}
 	@PostMapping
+<<<<<<< Updated upstream
 	public ResponseEntity<Item>post(@Valid @RequestBody Item item){
 		return ResponseEntity.status(HttpStatus.CREATED)
 				.body(itemRepository.save(item));
+=======
+	public ResponseEntity<Item> post(@Valid @RequestBody Item item) {
+		if (categoriaRepository.existsById(item.getCategoria().getId()))
+			return ResponseEntity.status(HttpStatus.CREATED)
+					.body(itemRepository.save(item));
+
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não existe!", null);
+>>>>>>> Stashed changes
 	}
 	@PutMapping
 	public ResponseEntity<Item> put(@Valid @RequestBody Item item){

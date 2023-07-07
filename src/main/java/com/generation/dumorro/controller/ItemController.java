@@ -59,7 +59,7 @@ public class ItemController {
 			return ResponseEntity.status(HttpStatus.CREATED)
 					.body(itemRepository.save(item));
 
-		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não exite!", null);
+		throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Categoria não existe!", null);
 	}
 
 	@PutMapping

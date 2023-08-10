@@ -1,6 +1,5 @@
 package com.generation.dumorro.model;
 
-import java.io.File;
 import java.math.BigDecimal;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -29,7 +28,7 @@ public class Item {
 	private String descricao;
 	
 	@NotNull(message = "A foto é obrigatório")
-	private File foto;
+	private String foto;
 	
 	@NotNull(message = "Preço é obrigatório")
     @Positive(message = "O preço deve ser maior do que zero")
@@ -78,11 +77,11 @@ public class Item {
 		this.descricao = descricao;
 	}
 
-	public File getFoto() {
+	public String getFoto() {
 		return foto;
 	}
 
-	public void setFoto(File foto) {
+	public void setFoto(String foto) {
 		this.foto = foto;
 	}
 
